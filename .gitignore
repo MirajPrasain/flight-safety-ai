@@ -1,0 +1,30 @@
+# macOS junk
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+venv/
+*.sqlite3
+
+# VSCode
+.vscode/
+
+# Cursor
+.cursor/
+
+# Logs
+*.log
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# IDE junk
+.idea/
+*.iml
