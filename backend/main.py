@@ -8,6 +8,8 @@ from langchain_utils import emergency_advisor_chain, risk_explanation_chain, cop
 from typing import Dict, Any
 from datetime import datetime
 
+from search_utils import search_similar_flights 
+
 app = FastAPI()
 
 #data =  {"_id" : ObjectId("64f5d0a6e234f1463be9ab12") }
@@ -131,3 +133,13 @@ async def copilot_chat(question: str):
         return {"answer": answer}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in copilot chat: {e}")
+    
+
+# LESSON 6: Search Similar Crashes
+@app.get("/similar_crashes/")
+async def similar_crashes(query: str, top_k: int = 3):
+    try:
+        results = await search_similar_flights(query_summary=query, top_k=top_k)
+        return {"results": results}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error finding similar crashes: {e}")

@@ -16,6 +16,9 @@ db = client[settings.DB_NAME]
 # Access the flight_data collection
 flight_data_collection = db["flight_data"]
 
+collection = db["crash_flights"] 
+#  Think of this like a SQL table — here you're using "crash_flights" for storing fatal historical incidents.
+
 def get_database():
     return db
 
