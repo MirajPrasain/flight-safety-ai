@@ -1,0 +1,383 @@
+/* WhyAICopilot.css - Premium Luxury Glassmorphic Design */
+
+.why-ai-copilot {
+  padding: 8rem 0;
+  position: relative;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s ease;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(0, 20, 40, 0.9));
+  overflow: hidden;
+}
+
+.why-ai-copilot.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.why-ai-copilot .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.why-ai-copilot .section-title {
+  font-size: 3.5rem;
+  color: #00d4ff;
+  text-align: center;
+  margin-bottom: 4rem;
+  text-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+  font-weight: 700;
+  letter-spacing: 2px;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* Luxury Cards Grid */
+.luxury-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 3rem;
+  padding: 1rem;
+}
+
+/* Individual Luxury Card */
+.luxury-card {
+  position: relative;
+  opacity: 0;
+  transform: translateY(40px);
+  animation: luxuryCardFadeUp 1s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+.luxury-card:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.luxury-card:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.luxury-card:nth-child(4) {
+  animation-delay: 0.8s;
+}
+
+/* Glass Container */
+.card-glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(25px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  min-height: 280px;
+}
+
+/* Card Content */
+.card-content {
+  position: relative;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Card Header */
+.card-header {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.card-accent {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #00d4ff, #00ffc8);
+  border-radius: 1px;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.7);
+  transition: all 0.3s ease;
+  position: relative;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.card-accent::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #00d4ff, #00ffc8);
+  border-radius: 1px;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.7);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.luxury-card:hover .card-accent {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.luxury-card:hover .card-accent::after {
+  opacity: 1;
+}
+
+/* Card Description */
+.card-description {
+  color: #b0c4de;
+  line-height: 1.7;
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+
+/* Gradient Overlay */
+.card-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--card-gradient);
+  border-radius: 24px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* Hover Effects */
+.luxury-card:hover .card-glass {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 
+    0 25px 80px rgba(0, 0, 0, 0.4),
+    0 0 60px rgba(0, 212, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.luxury-card:hover .card-content::before {
+  opacity: 1;
+}
+
+/* Card Glow Effect */
+.card-glow {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(45deg, 
+    rgba(0, 212, 255, 0.2), 
+    rgba(0, 255, 200, 0.1), 
+    rgba(0, 212, 255, 0.2)
+  );
+  border-radius: 27px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(12px);
+}
+
+.luxury-card:hover .card-glow {
+  opacity: 1;
+}
+
+/* Card Reflection */
+.card-reflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  border-radius: 24px 24px 0 0;
+  opacity: 0.7;
+}
+
+/* Inner Shadow */
+.card-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  border-radius: 24px;
+  pointer-events: none;
+}
+
+/* Luxury Card Animation */
+@keyframes luxuryCardFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Neon Glow Animation */
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(0, 212, 255, 0.3),
+      0 0 40px rgba(0, 212, 255, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(0, 212, 255, 0.5),
+      0 0 60px rgba(0, 212, 255, 0.2);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1440px) {
+  .luxury-cards {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+  }
+  
+  .why-ai-copilot .section-title {
+    font-size: 3.2rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .luxury-cards {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .card-content {
+    padding: 2rem 1.5rem;
+    min-height: 260px;
+  }
+  
+  .card-title {
+    font-size: 1.4rem;
+  }
+  
+  .why-ai-copilot .section-title {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .why-ai-copilot {
+    padding: 6rem 0;
+  }
+  
+  .why-ai-copilot .section-title {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .luxury-cards {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0.5rem;
+  }
+  
+  .card-content {
+    padding: 2rem 1.5rem;
+    min-height: 240px;
+  }
+  
+  .card-title {
+    font-size: 1.3rem;
+  }
+  
+  .card-description {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .why-ai-copilot .section-title {
+    font-size: 2rem;
+  }
+  
+  .card-content {
+    padding: 1.5rem 1rem;
+    min-height: 220px;
+  }
+  
+  .card-title {
+    font-size: 1.2rem;
+  }
+  
+  .card-description {
+    font-size: 0.9rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .card-title {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+  }
+  
+  .card-accent {
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+  }
+}
+
+/* Performance optimizations */
+.luxury-card,
+.card-glass,
+.card-content {
+  will-change: transform, opacity;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+} 

@@ -1,0 +1,440 @@
+/* LandingPage.css - Apple-Style Dark Radar Theme */
+
+.landing-page {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #0a0a0a;
+}
+
+/* Background Video */
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Breathing Overlay Gradient Animation */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 20, 40, 0.6) 50%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  z-index: 2;
+  animation: slowPulse 8s ease-in-out infinite alternate;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+}
+
+.hero-section .content {
+  text-align: center;
+  max-width: 800px;
+  padding: 0 2rem;
+  z-index: 5;
+}
+
+/* Apple-Style Hero Animation */
+.headline {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  letter-spacing: 2px;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1.2s ease-out 0.3s forwards, glow 3s ease-in-out infinite alternate 1.5s;
+}
+
+.subheadline {
+  font-size: 1.5rem;
+  color: #b0c4de;
+  margin-bottom: 3rem;
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1.4;
+  text-shadow: 0 0 10px rgba(176, 196, 222, 0.3);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1.2s ease-out 0.6s forwards;
+}
+
+.cta-button {
+  background: linear-gradient(45deg, #00d4ff, #0099cc);
+  border: none;
+  border-radius: 50px;
+  padding: 1rem 3rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1.2s ease-out 0.9s forwards;
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
+  background: linear-gradient(45deg, #00e6ff, #00b3e6);
+}
+
+.cta-button:active {
+  transform: translateY(-1px);
+}
+
+/* Enhanced Radar Elements */
+.radar-elements {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Pulsing Radar Circles */
+.radar-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: radarPulse 4s ease-in-out infinite;
+}
+
+.radar-circle-1 {
+  width: 200px;
+  height: 200px;
+  animation-delay: 0s;
+}
+
+.radar-circle-2 {
+  width: 400px;
+  height: 400px;
+  animation-delay: 1.3s;
+}
+
+.radar-circle-3 {
+  width: 600px;
+  height: 600px;
+  animation-delay: 2.6s;
+}
+
+/* Enhanced Radar Sweep */
+.radar-sweep {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 2px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #00ffff 180deg,
+    transparent 360deg
+  );
+  transform-origin: left center;
+  animation: radarSweep 3s linear infinite;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+  border-radius: 1px;
+}
+
+/* Scrollable Sections */
+.scrollable-sections {
+  position: relative;
+  z-index: 4;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+/* ===== APPLE-STYLE ANIMATIONS ===== */
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slowPulse {
+  0% {
+    opacity: 0.7;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 20, 40, 0.6) 50%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+  }
+  100% {
+    opacity: 0.9;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 30, 50, 0.7) 50%,
+      rgba(0, 0, 0, 0.9) 100%
+    );
+  }
+}
+
+@keyframes radarPulse {
+  0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+    border-color: rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.1);
+    border-color: rgba(0, 255, 255, 0.6);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+    border-color: rgba(0, 255, 255, 0.3);
+  }
+}
+
+@keyframes radarSweep {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.3);
+  }
+}
+
+/* ===== RESPONSIVE DESIGN - MACBOOK 13" & TABLETS FIRST ===== */
+
+@media (max-width: 1440px) {
+  .headline {
+    font-size: 3.8rem;
+  }
+  
+  .radar-elements {
+    width: 550px;
+    height: 550px;
+  }
+  
+  .radar-circle-3 {
+    width: 550px;
+    height: 550px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .headline {
+    font-size: 3.5rem;
+  }
+  
+  .subheadline {
+    font-size: 1.3rem;
+  }
+  
+  .radar-elements {
+    width: 500px;
+    height: 500px;
+  }
+  
+  .radar-circle-3 {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .headline {
+    font-size: 3rem;
+  }
+  
+  .subheadline {
+    font-size: 1.2rem;
+  }
+  
+  .cta-button {
+    padding: 0.9rem 2.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .radar-elements {
+    width: 400px;
+    height: 400px;
+  }
+  
+  .radar-circle-2 {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .radar-circle-3 {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .headline {
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
+  
+  .subheadline {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .cta-button {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+  
+  .hero-section .content {
+    padding: 0 1rem;
+  }
+  
+  .radar-elements {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .radar-circle-1 {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .radar-circle-2 {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .radar-circle-3 {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headline {
+    font-size: 2rem;
+  }
+  
+  .subheadline {
+    font-size: 1rem;
+  }
+  
+  .cta-button {
+    padding: 0.7rem 1.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .radar-elements {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .radar-circle-1 {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .radar-circle-2 {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .radar-circle-3 {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+/* Ensure video plays properly on all devices */
+@media (max-width: 768px) {
+  .background-video {
+    object-position: center;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .headline {
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+  }
+  
+  .subheadline {
+    text-shadow: 0 0 8px rgba(176, 196, 222, 0.4);
+  }
+}
+
+/* Smooth scrolling for better animation experience */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimize animations for performance */
+.radar-circle,
+.radar-sweep,
+.overlay {
+  will-change: transform, opacity;
+}
+
+/* Ensure proper z-index layering */
+.hero-section .content {
+  z-index: 5;
+}
+
+.radar-elements {
+  z-index: 3;
+}
+
+.overlay {
+  z-index: 2;
+}
+
+.background-video {
+  z-index: 1;
+} 
