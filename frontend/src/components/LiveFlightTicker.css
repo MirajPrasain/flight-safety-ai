@@ -1,0 +1,250 @@
+/* LiveFlightTicker.css */
+.live-flight-ticker {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 153, 204, 0.3);
+  overflow: hidden;
+  position: relative;
+  z-index: 100;
+}
+
+.ticker-container {
+  padding: 0.75rem 0;
+}
+
+.ticker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.ticker-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ticker-icon {
+  font-size: 1.2rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.ticker-text {
+  color: #00b4ff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.ticker-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stat-number {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-label {
+  color: #608090;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ticker-content {
+  overflow: hidden;
+  position: relative;
+  height: 2rem;
+}
+
+.ticker-track {
+  display: flex;
+  align-items: center;
+  animation: tickerMove 30s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.25rem 1rem;
+  margin-right: 2rem;
+  background: rgba(0, 153, 204, 0.1);
+  border: 1px solid rgba(0, 153, 204, 0.2);
+  border-radius: 20px;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.ticker-item:hover {
+  background: rgba(0, 153, 204, 0.2);
+  border-color: rgba(0, 153, 204, 0.4);
+  transform: scale(1.05);
+}
+
+.ticker-item.loading {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #a0c8e8;
+  animation: none;
+}
+
+.flight-callsign {
+  color: #00b4ff;
+  font-weight: 600;
+  min-width: 60px;
+}
+
+.flight-altitude {
+  color: #ffffff;
+  min-width: 50px;
+}
+
+.flight-speed {
+  color: #a0c8e8;
+  min-width: 40px;
+}
+
+.flight-country {
+  color: #608090;
+  min-width: 30px;
+}
+
+.flight-status {
+  color: #00ff88;
+  font-weight: 600;
+  min-width: 70px;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+/* Animations */
+@keyframes tickerMove {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ticker-header {
+    padding: 0 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .ticker-stats {
+    gap: 1rem;
+  }
+  
+  .ticker-item {
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    margin-right: 1rem;
+    font-size: 0.7rem;
+  }
+  
+  .flight-callsign {
+    min-width: 50px;
+  }
+  
+  .flight-altitude {
+    min-width: 40px;
+  }
+  
+  .flight-speed {
+    min-width: 30px;
+  }
+  
+  .flight-country {
+    min-width: 25px;
+  }
+  
+  .flight-status {
+    min-width: 60px;
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ticker-container {
+    padding: 0.5rem 0;
+  }
+  
+  .ticker-header {
+    padding: 0 0.75rem;
+  }
+  
+  .ticker-text {
+    font-size: 0.8rem;
+  }
+  
+  .stat-number {
+    font-size: 1rem;
+  }
+  
+  .stat-label {
+    font-size: 0.6rem;
+  }
+  
+  .ticker-item {
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    margin-right: 0.75rem;
+    font-size: 0.65rem;
+  }
+  
+  .flight-callsign {
+    min-width: 45px;
+  }
+  
+  .flight-altitude {
+    min-width: 35px;
+  }
+  
+  .flight-speed {
+    min-width: 25px;
+  }
+  
+  .flight-country {
+    min-width: 20px;
+  }
+  
+  .flight-status {
+    min-width: 50px;
+    font-size: 0.55rem;
+  }
+} 

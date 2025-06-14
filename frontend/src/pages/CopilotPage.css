@@ -71,7 +71,7 @@
 /* Header */
 .page-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 .page-title {
@@ -93,6 +93,60 @@
   margin: 0 auto;
   line-height: 1.6;
   font-weight: 400;
+}
+
+/* Globe Hero Card */
+.globe-hero-card {
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.globe-container {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(0, 100, 150, 0.15);
+  overflow: hidden;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 153, 204, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  min-height: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Globe Component Styling */
+.globe-container > div {
+  width: 100% !important;
+  height: 600px !important;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Flight Tooltip Styling */
+.flight-tooltip {
+  background: rgba(0, 0, 0, 0.9);
+  color: #ffffff;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 153, 204, 0.3);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.flight-tooltip strong {
+  color: #00b4ff;
+  font-weight: 600;
 }
 
 /* Flights Grid */
@@ -338,7 +392,55 @@
   font-weight: 400;
 }
 
+/* Copilot Footer */
+.copilot-footer {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 153, 204, 0.3);
+  padding: 1.5rem 0;
+  margin-top: 4rem;
+  position: relative;
+  z-index: 10;
+}
+
+.disclaimer {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.disclaimer br {
+  margin-bottom: 0.25rem;
+}
+
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .globe-container {
+    padding: 1.5rem;
+    min-height: 600px;
+  }
+  
+  .globe-container > div {
+    height: 500px !important;
+  }
+  
+  .copilot-footer {
+    margin-top: 3rem;
+    padding: 1.25rem 0;
+  }
+  
+  .disclaimer {
+    font-size: 0.85rem;
+    padding: 0 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 0 1rem;
@@ -350,6 +452,15 @@
   
   .page-subtitle {
     font-size: 1rem;
+  }
+  
+  .globe-container {
+    padding: 1rem;
+    min-height: 500px;
+  }
+  
+  .globe-container > div {
+    height: 400px !important;
   }
   
   .flights-grid {
@@ -364,11 +475,29 @@
   .flight-title {
     font-size: 1.2rem;
   }
+  
+  .copilot-footer {
+    margin-top: 2.5rem;
+    padding: 1rem 0;
+  }
+  
+  .disclaimer {
+    font-size: 0.8rem;
+    padding: 0 1rem;
+  }
 }
 
 @media (max-width: 480px) {
   .page-title {
     font-size: 2rem;
+  }
+  
+  .globe-container {
+    min-height: 400px;
+  }
+  
+  .globe-container > div {
+    height: 350px !important;
   }
   
   .card-content {
@@ -379,5 +508,15 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
+  }
+  
+  .copilot-footer {
+    margin-top: 2rem;
+    padding: 0.75rem 0;
+  }
+  
+  .disclaimer {
+    font-size: 0.75rem;
+    padding: 0 0.75rem;
   }
 } 

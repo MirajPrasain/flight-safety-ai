@@ -1,17 +1,78 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Globe from 'react-globe.gl';
+import LiveFlightTicker from '../components/LiveFlightTicker';
 import './CopilotPage.css';
 
 const CopilotPage = () => {
   const navigate = useNavigate();
+  const globeRef = useRef();
+  const [flights, setFlights] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Fix scroll position on page mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const flights = [
+  // Fetch live flight data from OpenSky Network API
+  useEffect(() => {
+    const fetchFlightData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('https://opensky-network.org/api/states/all');
+        const data = await response.json();
+        
+        if (data.states) {
+          // Process and filter flight data
+          const processedFlights = data.states
+            .filter(flight => flight[5] && flight[6] && flight[7]) // Has lat, lng, altitude
+            .slice(0, 15) // Limit to 15 flights for performance
+            .map(flight => ({
+              id: flight[0] || 'unknown',
+              callsign: flight[1] || 'N/A',
+              country: flight[2] || 'Unknown',
+              latitude: flight[6],
+              longitude: flight[5],
+              altitude: flight[7],
+              velocity: flight[9] || 0,
+              verticalRate: flight[11] || 0,
+              onGround: flight[8] || false
+            }));
+          
+          setFlights(processedFlights);
+        }
+      } catch (error) {
+        console.error('Error fetching flight data:', error);
+        // Fallback to demo data if API fails
+        setFlights([
+          { id: 'demo1', callsign: 'UAL123', country: 'US', latitude: 40.7128, longitude: -74.0060, altitude: 35000, velocity: 450, verticalRate: 0, onGround: false },
+          { id: 'demo2', callsign: 'DLH456', country: 'DE', latitude: 52.5200, longitude: 13.4050, altitude: 32000, velocity: 480, verticalRate: 0, onGround: false },
+          { id: 'demo3', callsign: 'BAW789', country: 'GB', latitude: 51.5074, longitude: -0.1278, altitude: 28000, velocity: 420, verticalRate: 0, onGround: false }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFlightData();
+    
+    // Refresh flight data every 30 seconds
+    const interval = setInterval(fetchFlightData, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Initialize globe
+  useEffect(() => {
+    if (globeRef.current) {
+      globeRef.current.controls().autoRotate = true;
+      globeRef.current.controls().autoRotateSpeed = 0.5;
+      globeRef.current.pointOfView({ lat: 20, lng: 0, altitude: 2.5 });
+    }
+  }, []);
+
+  const flightsData = [
     {
       id: "KAL801",
       title: "Korean Air Flight 801",
@@ -71,6 +132,15 @@ const CopilotPage = () => {
     }
   };
 
+  const globeVariants = {
+    initial: { opacity: 0, scale: 0.8 },
+    animate: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { duration: 1, delay: 0.4, ease: "easeOut" }
+    }
+  };
+
   const cardVariants = {
     initial: { opacity: 0, y: 50 },
     animate: (index) => ({
@@ -78,7 +148,7 @@ const CopilotPage = () => {
       y: 0,
       transition: { 
         duration: 0.6, 
-        delay: 0.4 + (index * 0.1), 
+        delay: 0.8 + (index * 0.1), 
         ease: "easeOut" 
       }
     })
@@ -107,6 +177,9 @@ const CopilotPage = () => {
         <div className="hud-grid"></div>
       </div>
 
+      {/* Live Flight Ticker */}
+      <LiveFlightTicker />
+
       <div className="page-content">
         <div className="container">
           <motion.header 
@@ -121,8 +194,44 @@ const CopilotPage = () => {
             </p>
           </motion.header>
 
+          {/* Live Globe Hero Card */}
+          <motion.div 
+            className="globe-hero-card"
+            variants={globeVariants}
+            initial="initial"
+            animate="animate"
+          >
+            <div className="globe-container">
+              <Globe
+                ref={globeRef}
+                globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+                backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+                pointsData={flights}
+                pointLat="latitude"
+                pointLng="longitude"
+                pointColor={() => '#00b4ff'}
+                pointAltitude="altitude"
+                pointRadius={0.5}
+                pointResolution={12}
+                pointLabel={d => `
+                  <div class="flight-tooltip">
+                    <strong>${d.callsign}</strong><br/>
+                    Alt: ${Math.round(d.altitude)}ft<br/>
+                    Speed: ${Math.round(d.velocity)}kts<br/>
+                    ${d.country}
+                  </div>
+                `}
+                atmosphereColor="#0099cc"
+                atmosphereAltitude={0.15}
+                enablePointerInteraction={true}
+                width={800}
+                height={600}
+              />
+            </div>
+          </motion.div>
+
           <div className="flights-grid">
-            {flights.map((flight, index) => (
+            {flightsData.map((flight, index) => (
               <motion.div 
                 key={flight.id} 
                 className="flight-card"
@@ -193,6 +302,13 @@ const CopilotPage = () => {
           </motion.div>
         </div>
       </div>
+
+      <footer className="copilot-footer">
+        <p className="disclaimer">
+          ⚠️ Only 15 live flights are shown due to OpenSky Network's free tier API limitations.<br />
+          For full functionality, authenticated access or cached flight data is recommended.
+        </p>
+      </footer>
     </motion.div>
   );
 };

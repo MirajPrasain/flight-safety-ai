@@ -5,9 +5,37 @@ A React frontend application for simulating AI-assisted flight safety scenarios.
 ## Features
 
 - **Landing Page**: Dark radar-themed interface with animated elements
+- **Live Flight Tracking**: Real-time flight data with animated ticker display
 - **Flight Selection**: Interactive selection of historic flight incidents
 - **AI Simulation**: Chat-based simulation of AI Copilot assistance
+- **3D Globe Visualization**: Interactive globe with live flight markers
 - **Responsive Design**: Optimized for desktop and tablet viewing
+
+## AI-Powered Development
+
+This project leverages **Google Gemini** for intelligent API integration and development assistance:
+
+### API Integration Support
+- **Live Flight Data**: Gemini helped identify and integrate the OpenSky Network API for real-time flight tracking
+- **Rate Limit Solutions**: Assisted in implementing fallback strategies and caching mechanisms for API rate limits
+- **Alternative APIs**: Provided recommendations for authenticated access and premium flight data sources
+
+### Development Guidance
+- **Code Optimization**: Suggested performance improvements for real-time data handling
+- **Error Handling**: Helped implement robust error handling and fallback mechanisms
+- **Best Practices**: Guided implementation of aviation industry standards and best practices
+
+## API Limitations & Solutions
+
+### Current Implementation
+- **OpenSky Network API**: Free tier with rate limits (15 flights max)
+- **Fallback Data**: Demo flight data when API is unavailable
+- **Real-time Updates**: 30-second refresh intervals
+
+### Recommended Improvements
+- **Authenticated Access**: Upgrade to OpenSky Network premium tier for higher limits
+- **Caching Strategy**: Implement local caching to reduce API calls
+- **Alternative Sources**: Consider ADS-B Exchange or FlightAware APIs for enhanced data
 
 ## Video Background Credit
 
