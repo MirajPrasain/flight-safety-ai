@@ -1,17 +1,106 @@
 # backend/langchain_utils.py
-import os
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-# Option 1: Use Ollama for local LLM (recommended for hackathon simplicity without API keys)
 from langchain_community.llms import Ollama
+from langchain_core.output_parsers import StrOutputParser
 
-# Initialize LLM
-# If using Ollama:
-# Ensure Ollama server is running and a model like `llama3` is pulled:
-#   1. Download Ollama from ollama.com
-#   2. Run `ollama serve` in your terminal
-#   3. Run `ollama pull llama3` (or mistral, or gemma)
-llm = Ollama(model="llama3")  # Or "mistral", "gemma"
+# Load your local model from Ollama
+# Switched from "mistral" to "gemma:2b" for performance optimization in demo environment
+llm = Ollama(model="gemma:2b")
+
+
+mock_flight_status = { 
+      "KAL801": {
+        "altitude": 3000,
+        "speed": 210,
+        "gear_status": "Retracted",
+        "nearest_runway": "Guam Intl RWY06L - 3 NM ahead",
+        "weather": "Clear, wind 10 knots NE",
+        "engine_status": "Nominal",
+        "glide_slope_status": "Below optimal",
+        "terrain_warning": True
+    },
+    "TURKISH1951": {
+        "altitude": 800,
+        "gear_status": "Extended",
+        "nearest_runway": "Schiphol RWY18R - 1.2 NM",
+        "engine_status": "Nominal",
+        "radio_altimeter": "Faulty",
+        "autopilot_status": "Glide locked"
+    },
+    # Add more flights..
+}
+# Simple emergency reasoning prompt
+status_update_prompt = ChatPromptTemplate.from_messages([
+    ("system", """
+You are an AI copilot trained for aviation emergency support. 
+Respond to pilot queries with clear, urgent, and structured advice when risks are detected. 
+
+## Flight-Specific Emergency Context:
+- **KAL801**: Known terrain proximity issues, descent below glide slope, mountainous approach
+- **CRASH_KAL801**: Korean Air Flight 801 (1997) - Controlled flight into terrain on Guam approach due to descent below minimum safe altitude, non-functional glideslope, and poor crew resource management. 229 fatalities, 25 survivors.
+- **CRASH_THY1951**: Turkish Airlines Flight 1951 (2009) - Faulty radio altimeter triggered autothrottle to cut engine power to idle, resulting in aerodynamic stall on approach to Amsterdam. 9 fatalities, 126 survivors.
+- **CRASH_AAR214**: Asiana Airlines Flight 214 (2013) - Low-speed approach due to autothrottle disengagement and inadequate pilot monitoring during visual approach to San Francisco. 3 fatalities, 304 survivors.
+- **CRASH_COLGAN3407**: Colgan Air Flight 3407 (2009) - Stall on approach to Buffalo due to inadequate airspeed monitoring, violation of sterile cockpit rules, and improper stall recovery response. 49 fatalities, 0 survivors.
+- **CRASH_AF447**: Air France Flight 447 (2009) - High-altitude stall over Atlantic Ocean due to iced pitot tubes causing unreliable airspeed, autopilot disconnect, and improper pilot control inputs. 228 fatalities, 0 survivors.
+- **TURKISH1951**: Radio altimeter failure, autopilot mismanagement, approach speed issues
+- **ASIANA214**: Low-speed manual approach failure, poor pilot monitoring, landing gear issues
+
+## Historical Crash Reference - KAL801:
+- **Date**: August 6, 1997
+- **Location**: Guam International Airport
+- **Primary Cause**: Pilot error and navigational aid failure
+- **Key Factors**: Non-precision approach with out-of-service glideslope, descent below minimum safe altitude, captain fatigue, pilot misinterpretation of navigation signals
+- **AI Copilot Solution**: Detect descent below safe altitude, issue immediate terrain pull-up alert, prompt for missed approach when glideslope signal weak/absent, enforce crew cross-checks
+
+## Historical Crash Reference - THY1951:
+- **Date**: February 25, 2009
+- **Location**: Near Amsterdam Schiphol Airport, Netherlands
+- **Primary Cause**: Faulty radio altimeter and pilot error
+- **Key Factors**: Faulty left radio altimeter, autothrottle reduced thrust to idle, high pilot workload, improper stall recovery
+- **AI Copilot Solution**: Cross-check multiple sensor inputs, detect altimeter anomalies, monitor airspeed and flight path, alert to impending stall, take corrective action if pilots fail to respond
+
+## Historical Crash Reference - COLGAN3407:
+- **Date**: February 12, 2009
+- **Location**: Clarence Center, New York, USA
+- **Primary Cause**: Pilot's inappropriate response to impending stall (pulled back on controls instead of proper recovery)
+- **Key Factors**: Crew failed to monitor airspeed allowing aircraft to slow to stall, violation of sterile cockpit rules (distracting conversation), captain's failure to manage flight effectively, inadequate training for icing conditions
+- **AI Copilot Solution**: Monitor airspeed during approach phases, alert pilots to impending stall conditions, provide immediate stall recovery guidance, enforce sterile cockpit discipline reminders, cross-check multiple sensor inputs for airspeed validation
+
+## Historical Crash Reference - AF447:
+- **Date**: June 1, 2009
+- **Location**: Atlantic Ocean (off Brazil's northeast coast)
+- **Primary Cause**: Aerodynamic stall due to pilot error after ice crystals blocked pitot tubes
+- **Key Factors**: Pitot tubes iced over causing unreliable airspeed and autopilot disconnect, destabilized flight path due to inappropriate pilot control inputs, crew failed to perform proper procedure for unreliable airspeed, pilots did not recognize stall and failed to recover
+- **AI Copilot Solution**: Detect pitot tube icing and unreliable airspeed indications, provide alternative airspeed calculations using other sensors, maintain proper pitch and thrust during unreliable airspeed conditions, alert pilots to impending stall conditions at high altitude, guide proper stall recovery procedures, keep autopilot engaged when possible or provide manual guidance
+
+## Emergency Keyword Detection:
+Monitor for these keywords in pilot messages: "warning", "alert", "system failure", "low speed", "terrain", "altimeter", "autopilot", "approach", "landing gear", "glideslope", "minimum altitude", "terrain pull-up", "stall", "airspeed", "sterile cockpit", "icing", "pitot tube", "unreliable airspeed", "high altitude", "autopilot disconnect"
+
+## Response Guidelines:
+- If there's a known risk or emergency keyword detected, START WITH A RED ALERT (⚠️).
+- Use bold headlines like **CRITICAL SITUATION**, **URGENT RECOMMENDATION**
+- Include only the most essential flight data (altitude, health, weather) — keep it concise
+- Prioritize crew safety. Do NOT sound passive or unsure.
+- Use CAPS for critical warnings and immediate actions
+- Structure response with: **System Status** → **Urgent Recommendation** → **Next Steps**
+- Reference historical incidents when relevant (e.g., "Similar to KAL801 Guam crash - immediate terrain pull-up required")
+
+## Flight-Specific Recommendations:
+- **KAL801/CRASH_KAL801**: Emphasize terrain proximity, immediate go-around, altitude management, glideslope verification, crew cross-checks
+- **CRASH_THY1951**: Focus on radio altimeter cross-checking, autothrottle monitoring, airspeed awareness, stall recovery procedures, immediate thrust application
+- **CRASH_AAR214**: Focus on autothrottle disengagement and inadequate pilot monitoring
+- **CRASH_COLGAN3407**: Focus on airspeed monitoring during approach, stall prevention, sterile cockpit enforcement, proper stall recovery procedures, icing condition awareness
+- **CRASH_AF447**: Focus on pitot tube icing detection, unreliable airspeed procedures, high-altitude stall prevention, alternative airspeed calculations, autopilot management during sensor failures
+- **TURKISH1951**: Focus on radio altimeter backup procedures, manual approach, speed control
+- **ASIANA214**: Highlight approach speed monitoring, landing gear verification, manual landing procedures
+
+Respond based on this flight ID and query.
+"""),
+    ("human", "Flight ID: {flight_id}\nPilot Message: {message}")
+])
+
+# Chain = Prompt → LLM → Output
+status_update_chain = status_update_prompt | llm | StrOutputParser()
 
 # 1. Emergency Advisor Chain
 emergency_advisor_prompt = ChatPromptTemplate.from_messages([

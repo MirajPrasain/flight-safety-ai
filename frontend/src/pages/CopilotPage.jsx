@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Globe from 'react-globe.gl';
 import LiveFlightTicker from '../components/LiveFlightTicker';
+import { WarningIcon } from '../components/Icons';
 import './CopilotPage.css';
 
 const CopilotPage = () => {
   const navigate = useNavigate();
   const globeRef = useRef();
   const [flights, setFlights] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   // Fix scroll position on page mount
   useEffect(() => {
@@ -20,7 +20,6 @@ const CopilotPage = () => {
   useEffect(() => {
     const fetchFlightData = async () => {
       try {
-        setLoading(true);
         const response = await fetch('https://opensky-network.org/api/states/all');
         const data = await response.json();
         
@@ -51,8 +50,6 @@ const CopilotPage = () => {
           { id: 'demo2', callsign: 'DLH456', country: 'DE', latitude: 52.5200, longitude: 13.4050, altitude: 32000, velocity: 480, verticalRate: 0, onGround: false },
           { id: 'demo3', callsign: 'BAW789', country: 'GB', latitude: 51.5074, longitude: -0.1278, altitude: 28000, velocity: 420, verticalRate: 0, onGround: false }
         ]);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -79,6 +76,8 @@ const CopilotPage = () => {
       date: "August 6, 1997",
       location: "Guam",
       cause: "Pilot descended below glide slope despite warnings",
+      primary_cause: "Controlled flight into terrain due to pilot error and navigational aid failure",
+      ai_solution: "Detect descent below safe altitude, issue immediate terrain pull-up alert, prompt for missed approach when glideslope signal weak/absent, enforce crew cross-checks"
     },
     {
       id: "TURKISH1951",
@@ -86,6 +85,8 @@ const CopilotPage = () => {
       date: "February 25, 2009",
       location: "Amsterdam",
       cause: "Radio altimeter failure & autopilot mismanagement",
+      primary_cause: "Faulty radio altimeter triggered autothrottle to cut engine power to idle, resulting in aerodynamic stall",
+      ai_solution: "Cross-check multiple sensor inputs, detect altimeter anomalies, monitor airspeed and flight path, alert to impending stall, take corrective action if pilots fail to respond"
     },
     {
       id: "ASIANA214",
@@ -93,20 +94,26 @@ const CopilotPage = () => {
       date: "July 6, 2013",
       location: "San Francisco",
       cause: "Low-speed approach with inadequate manual correction",
+      primary_cause: "Low-speed approach due to autothrottle disengagement and inadequate pilot monitoring during visual approach",
+      ai_solution: "Monitor approach speed continuously, alert pilots to low-speed conditions, provide immediate thrust adjustment guidance, enforce visual approach monitoring procedures"
     },
     {
-      id: "AIRFRANCE447",
+      id: "CRASH_AF447",
       title: "Air France Flight 447",
       date: "June 1, 2009",
       location: "Atlantic Ocean",
       cause: "Inconsistent speed readings → Stall → Crew disorientation",
+      primary_cause: "Aerodynamic stall due to pilot error after ice crystals blocked the pitot tubes, leading to unreliable airspeed and improper control inputs",
+      ai_solution: "Detect pitot tube icing and unreliable airspeed indications, provide alternative airspeed calculations using other sensors, maintain proper pitch and thrust during unreliable airspeed conditions, alert pilots to impending stall conditions at high altitude"
     },
     {
-      id: "COLGAN3407",
+      id: "CRASH_COLGAN3407",
       title: "Colgan Air Flight 3407",
       date: "February 12, 2009",
       location: "Buffalo, NY",
       cause: "Stall due to pilot error & improper stick control",
+      primary_cause: "Pilot's inappropriate response to an impending stall (pulled back on controls instead of proper recovery), resulting in loss of control",
+      ai_solution: "Monitor airspeed during approach phases, alert pilots to impending stall conditions, provide immediate stall recovery guidance, enforce sterile cockpit discipline reminders, cross-check multiple sensor inputs for airspeed validation"
     },
   ];
 
@@ -188,9 +195,9 @@ const CopilotPage = () => {
             initial="initial"
             animate="animate"
           >
-            <h1 className="page-title">AI Copilot Simulation</h1>
+            <h1 className="page-title">Crash Case Studies & AI Copilot</h1>
             <p className="page-subtitle">
-              Select a historic flight incident to simulate how AI Copilot could have assisted
+              Explore historical aviation incidents and simulate how AI Copilot could have prevented them
             </p>
           </motion.header>
 
@@ -267,6 +274,18 @@ const CopilotPage = () => {
                       <p className="cause-description">{flight.cause}</p>
                     </div>
 
+                    <div className="crash-details">
+                      <div className="detail-section">
+                        <h5 className="section-title">Root Cause Analysis</h5>
+                        <p className="section-content">{flight.primary_cause}</p>
+                      </div>
+                      
+                      <div className="detail-section">
+                        <h5 className="section-title">AI Copilot Solution</h5>
+                        <p className="section-content">{flight.ai_solution}</p>
+                      </div>
+                    </div>
+
                     <motion.button 
                       className="simulate-btn"
                       onClick={() => handleSimulateClick(flight.id)}
@@ -297,7 +316,7 @@ const CopilotPage = () => {
             }}
           >
             <p className="footer-text">
-              Experience real-time AI assistance in critical flight scenarios
+              Learn from history: Experience how AI copilot technology could have changed aviation safety
             </p>
           </motion.div>
         </div>
@@ -305,7 +324,7 @@ const CopilotPage = () => {
 
       <footer className="copilot-footer">
         <p className="disclaimer">
-          ⚠️ Only 15 live flights are shown due to OpenSky Network's free tier API limitations.<br />
+          <WarningIcon size={16} /> Only 15 live flights are shown due to OpenSky Network's free tier API limitations.<br />
           For full functionality, authenticated access or cached flight data is recommended.
         </p>
       </footer>

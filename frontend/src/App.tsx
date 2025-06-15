@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import './App.css';
 
 import CopilotPage from './pages/CopilotPage';
+import ChatPage from './pages/ChatPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/copilot" element={<CopilotPage />} />
+          <Route path="/chat/:flightId" element={<ChatPage />} />
         </Routes>
       </div>
     </Router>

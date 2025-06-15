@@ -266,10 +266,45 @@
 }
 
 .cause-description {
-  color: #c0c0c0;
+  color: #608090;
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 0;
+}
+
+/* Crash Details Sections */
+.crash-details {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 100, 150, 0.1);
+}
+
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #00b4ff;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-content {
+  color: #608090;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0.75rem;
+  background: rgba(0, 100, 150, 0.03);
+  border-radius: 8px;
+  border-left: 3px solid rgba(0, 153, 204, 0.2);
 }
 
 /* Simulate Button */
@@ -476,6 +511,15 @@
     font-size: 1.2rem;
   }
   
+  .section-title {
+    font-size: 0.8rem;
+  }
+  
+  .section-content {
+    font-size: 0.8rem;
+    padding: 0.5rem;
+  }
+  
   .copilot-footer {
     margin-top: 2.5rem;
     padding: 1rem 0;
@@ -508,6 +552,15 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
+  }
+  
+  .section-title {
+    font-size: 0.75rem;
+  }
+  
+  .section-content {
+    font-size: 0.75rem;
+    padding: 0.5rem;
   }
   
   .copilot-footer {

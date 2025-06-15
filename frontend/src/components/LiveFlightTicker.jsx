@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { PlaneIcon } from './Icons';
 import './LiveFlightTicker.css';
 
 const LiveFlightTicker = () => {
@@ -59,7 +60,9 @@ const LiveFlightTicker = () => {
       <div className="ticker-container">
         <div className="ticker-header">
           <div className="ticker-title">
-            <span className="ticker-icon">✈️</span>
+            <span className="ticker-icon">
+              <PlaneIcon size={20} />
+            </span>
             <span className="ticker-text">LIVE FLIGHT TRACKING</span>
           </div>
           <div className="ticker-stats">

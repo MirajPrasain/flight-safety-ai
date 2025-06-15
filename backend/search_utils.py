@@ -5,6 +5,68 @@ from pymongo.errors import PyMongoError
 from typing import List, Dict
 
 
+async def store_crash_flight_data(crash_data: Dict) -> bool:
+    """
+    Stores crash flight data with vector embedding for similarity search.
+    
+    Args:
+        crash_data: Dictionary containing crash flight information
+    
+    Returns:
+        bool: True if successful, False otherwise
+    """
+    try:
+        # Create summary for embedding
+        summary = f"{crash_data['title']} - {crash_data['summary']} - Primary cause: {crash_data['primary_cause']}"
+        
+        # Generate embedding
+        model = SentenceTransformer("all-MiniLM-L6-v2")
+        vector = model.encode(summary).tolist()
+        
+        # Prepare document for storage
+        flight_doc = {
+            "flight_id": crash_data["flight_id"],
+            "title": crash_data["title"],
+            "date": crash_data["date"],
+            "location": crash_data["location"],
+            "summary": crash_data["summary"],
+            "passengers": crash_data["passengers"],
+            "fatalities": crash_data["fatalities"],
+            "survivors": crash_data["survivors"],
+            "primary_cause": crash_data["primary_cause"],
+            "key_factors": crash_data["key_factors"],
+            "how_ai_copilot_could_help": crash_data["how_ai_copilot_could_help"],
+            "vector": vector,
+            "embedding_summary": summary
+        }
+        
+        # Store in flight_vectors collection
+        flight_vector_collection = db["flight_vectors"]
+        
+        # Check if flight already exists
+        existing = await flight_vector_collection.find_one({"flight_id": crash_data["flight_id"]})
+        if existing:
+            # Update existing record
+            await flight_vector_collection.update_one(
+                {"flight_id": crash_data["flight_id"]},
+                {"$set": flight_doc}
+            )
+            print(f"✅ Updated existing crash data for {crash_data['flight_id']}")
+        else:
+            # Insert new record
+            await flight_vector_collection.insert_one(flight_doc)
+            print(f"✅ Stored new crash data for {crash_data['flight_id']}")
+        
+        return True
+        
+    except PyMongoError as e:
+        print(f"❌ MongoDB error storing crash data: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ Unexpected error storing crash data: {e}")
+        return False
+
+
 async def search_similar_flights(query_summary: str, top_k: int = 3) -> List[Dict]:
     """
     Finds the top-K most similar flight summaries based on vector similarity.
