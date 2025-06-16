@@ -11,7 +11,7 @@ export const TTS_PROVIDERS = {
 };
 
 // Current TTS provider (can be changed by user)
-let currentProvider = TTS_PROVIDERS.WEB_SPEECH;
+let currentProvider = TTS_PROVIDERS.ELEVENLABS;
 
 // Global audio reference for ElevenLabs
 let currentAudio = null;

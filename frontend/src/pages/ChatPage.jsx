@@ -155,29 +155,36 @@ const ChatPage = () => {
       if (!trimmed) return null;
       
       // Check if this is a header section (contains keywords like "System Status", "Urgent Recommendation", etc.)
-      const isHeader = /^(System Status|Urgent Recommendation|Critical Situation|Next Steps)/i.test(trimmed);
+      const isHeader = /^(System Status|Urgent Recommendation|Critical Situation|Next Steps|Emergency Procedures|Historical Reference|Lessons Learned|Applicable Procedures|Diversion Recommendation|Approach Procedures|Alternatives)/i.test(trimmed);
       
-      // Format the text with proper indentations
-      const formattedText = trimmed
-        .split('\n')
-        .map((line, lineIndex) => {
-          const trimmedLine = line.trim();
-          if (!trimmedLine) return '';
-          
-          // Add proper indentation for bullet points and numbered lists
-          if (/^[-•*]\s/.test(trimmedLine)) {
-            return `    ${trimmedLine}`; // 4 spaces for bullet points
-          }
-          if (/^\d+\.\s/.test(trimmedLine)) {
-            return `    ${trimmedLine}`; // 4 spaces for numbered lists
-          }
-          if (isHeader && lineIndex > 0) {
-            return `  ${trimmedLine}`; // 2 spaces for header content
-          }
-          return trimmedLine;
-        })
-        .filter(line => line !== '')
-        .join('\n');
+      // Format the text with proper structure
+      const lines = trimmed.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      
+      const formattedLines = lines.map((line, lineIndex) => {
+        // Handle bullet points
+        if (/^[-•*]\s/.test(line)) {
+          return `  • ${line.replace(/^[-•*]\s/, '')}`;
+        }
+        // Handle numbered lists
+        if (/^\d+\.\s/.test(line)) {
+          return `  ${line}`;
+        }
+        // Handle headers (first line of header sections)
+        if (isHeader && lineIndex === 0) {
+          return `📋 ${line}`;
+        }
+        // Handle sub-headers
+        if (/^[A-Z][A-Z\s]+:$/.test(line)) {
+          return `\n🔹 ${line}`;
+        }
+        // Regular content with proper indentation
+        if (isHeader && lineIndex > 0) {
+          return `  ${line}`;
+        }
+        return line;
+      });
+      
+      const formattedText = formattedLines.join('\n');
       
       return (
         <motion.div 
