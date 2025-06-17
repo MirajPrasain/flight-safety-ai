@@ -116,8 +116,54 @@ CONTACT ATC IMMEDIATELY
 def get_divert_airport_chain(flight_id: str) -> Any:
     """Divert airport chain for landing/approach scenarios."""
     
-    divert_prompt = ChatPromptTemplate.from_messages([
-        ("system", f"""
+    # 🛑 KAL801-specific divert airport chain with Mariana Islands context
+    if flight_id in ["KAL801", "CRASH_KAL801"]:
+        kal801_divert_prompt = ChatPromptTemplate.from_messages([
+            ("system", f"""
+You are an AI copilot assisting with airport diversion for flight {flight_id}.
+Provide specific airport recommendations and approach procedures.
+
+CRITICAL FLIGHT CONTEXT - KAL801:
+Flight ID: KAL801
+Location: Guam, Mariana Islands, Pacific Ocean
+Airport: Guam International Airport (GUM)
+⚠️ RESTRICTION: Only suggest airports within Mariana Islands region. Do not hallucinate airports like San Francisco, Los Angeles, Oakland, San Jose, Sacramento, or any mainland US airports.
+
+MARIANA ISLANDS DIVERSION AIRPORTS:
+• Andersen AFB (PGUA) - 8 NM from GUM, Ceiling: 800ft, Visibility: 2 miles
+• Rota International (ROP) - 45 NM from GUM, Ceiling: 1200ft, Visibility: 3 miles  
+• Saipan International (SPN) - 120 NM from GUM, Ceiling: 1500ft, Visibility: 4 miles
+
+## Response Format:
+DIVERSION RECOMMENDATION:
+[Recommended Mariana Islands airport with distance and approach type]
+
+APPROACH PROCEDURES:
+- Runway: [specific runway]
+- Approach: [ILS/VOR/Visual]
+- Minimums: [ceiling/visibility from data above]
+
+ALTERNATIVES:
+[List of backup Mariana Islands airports only]
+"""),
+            ("human", "Flight ID: {flight_id}\nDiversion Request: {message}")
+        ])
+        
+        # Create chain with validation
+        chain = kal801_divert_prompt | llm | StrOutputParser()
+        
+        # Add validation wrapper for KAL801
+        async def validated_chain(input_data):
+            response = await chain.ainvoke(input_data)
+            # Import validation function
+            from langchain_utils import validate_kal801_airport_suggestion
+            return validate_kal801_airport_suggestion(response)
+        
+        return validated_chain
+    else:
+        # Standard divert airport chain for other flights
+        divert_prompt = ChatPromptTemplate.from_messages([
+            ("system", f"""
 You are an AI copilot assisting with airport diversion for flight {flight_id}.
 Provide specific airport recommendations and approach procedures.
 
@@ -139,16 +185,67 @@ APPROACH PROCEDURES:
 ALTERNATIVES:
 [List of backup airports]
 """),
-        ("human", "Flight ID: {flight_id}\nDiversion Request: {message}")
-    ])
-    
-    return divert_prompt | llm | StrOutputParser()
+            ("human", "Flight ID: {flight_id}\nDiversion Request: {message}")
+        ])
+        
+        return divert_prompt | llm | StrOutputParser()
 
 def get_similar_crashes_chain(flight_id: str) -> Any:
     """Similar crashes chain for historical reference."""
     
-    similar_prompt = ChatPromptTemplate.from_messages([
-        ("system", f"""
+    # 🛑 KAL801-specific grounded context for similar crashes
+    if flight_id in ["KAL801", "CRASH_KAL801"]:
+        kal801_system_prompt = f"""
+You are an AI copilot providing historical crash analysis for flight {flight_id}.
+Reference relevant past incidents and lessons learned.
+
+CRITICAL FLIGHT CONTEXT - KAL801:
+Flight ID: KAL801
+Location: Guam, Pacific Ocean
+Airport: Guam International Airport (GUM)
+Date: August 6, 1997
+Situation: Night approach with non-functional ILS glideslope
+Critical Warnings: Terrain alert near Nimitz Hill, descent below minimum safe altitude
+⚠️ RESTRICTION: Only reference Guam-related incidents. Do not hallucinate airports like San Francisco, Los Angeles, or any mainland US airports.
+
+## Flight-Specific Historical Context:
+- **KAL801/CRASH_KAL801**: 1997 Guam crash - terrain proximity, glide slope failure, non-functional ILS, night approach
+- **CRASH_AAR214**: 2013 San Francisco crash - low-speed approach, autothrottle disengagement
+- **CRASH_THY1951**: 2009 Amsterdam crash - radio altimeter, autopilot issues
+- **ASIANA214**: 2013 San Francisco crash - low-speed approach, crew monitoring
+
+## Response Format:
+HISTORICAL REFERENCE:
+[Relevant past incident with key factors - FOCUS ON GUAM/TERRAIN PROXIMITY]
+
+LESSONS LEARNED:
+- [Lesson 1]
+- [Lesson 2]
+- [Lesson 3]
+
+APPLICABLE PROCEDURES:
+[Specific procedures from historical incident]
+"""
+        similar_prompt = ChatPromptTemplate.from_messages([
+            ("system", kal801_system_prompt),
+            ("human", "Flight ID: {flight_id}\nHistorical Query: {message}")
+        ])
+        
+        # Create chain with validation
+        chain = similar_prompt | llm | StrOutputParser()
+        
+        # Add validation wrapper for KAL801
+        async def validated_chain(input_data):
+            response = await chain.ainvoke(input_data)
+            # Import validation function
+            from langchain_utils import validate_kal801_airport_suggestion
+            return validate_kal801_airport_suggestion(response)
+        
+        return validated_chain
+    else:
+        # Standard similar crashes chain for other flights
+        similar_prompt = ChatPromptTemplate.from_messages([
+            ("system", f"""
 You are an AI copilot providing historical crash analysis for flight {flight_id}.
 Reference relevant past incidents and lessons learned.
 
@@ -170,10 +267,10 @@ LESSONS LEARNED:
 APPLICABLE PROCEDURES:
 [Specific procedures from historical incident]
 """),
-        ("human", "Flight ID: {flight_id}\nHistorical Query: {message}")
-    ])
-    
-    return similar_prompt | llm | StrOutputParser()
+            ("human", "Flight ID: {flight_id}\nHistorical Query: {message}")
+        ])
+        
+        return similar_prompt | llm | StrOutputParser()
 
 def get_system_status_chain(flight_id: str) -> Any:
     """System status chain for instrument/system checks."""

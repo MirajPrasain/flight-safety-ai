@@ -6,7 +6,7 @@ from models import FlightData
 from pymongo.errors import PyMongoError
 from bson import ObjectId
 
-from langchain_utils import emergency_advisor_chain, risk_explanation_chain, copilot_chat_chain, format_flight_data_for_llm, status_update_chain
+from langchain_utils import emergency_advisor_chain, risk_explanation_chain, copilot_chat_chain, format_flight_data_for_llm, status_update_chain, get_emergency_advisor_chain_with_validation, get_risk_explanation_chain_with_validation
 
 from typing import Dict, Any
 from datetime import datetime
@@ -119,8 +119,15 @@ async def advise_pilot(flight_data: FlightData = None, flight_id: str = None):
         # Format the nested data for the LLM prompt
         formatted_input = format_flight_data_for_llm(flight_data_dict)
 
-        # Invoke the LangChain emergency advisor chain
-        advice = await emergency_advisor_chain.ainvoke(formatted_input)
+        # 🛑 Use KAL801-specific chain with validation if flight_id is KAL801
+        flight_id_for_chain = flight_data_dict.get("flight_id", flight_id)
+        if flight_id_for_chain == "KAL801":
+            # Use KAL801-specific emergency advisor with grounded context
+            emergency_chain = get_emergency_advisor_chain_with_validation("KAL801")
+            advice = await emergency_chain(formatted_input)
+        else:
+            # Use standard emergency advisor chain
+            advice = await emergency_advisor_chain.ainvoke(formatted_input)
 
         return {"advice": advice}
     except Exception as e:
@@ -193,12 +200,18 @@ async def explain_risk(flight_data: FlightData, anomaly_description: str):
         formatted_input = format_flight_data_for_llm(flight_data_dict)
         # Format function converts the dictionary to flat, having single key value pairs. This is needed because the LangChain prompt expects a flat input, not deeply nested structures.
 
-
         # Add the anomaly description to the input for the risk explanation chain
         formatted_input["anomaly_description"] = anomaly_description
 
-
-        explanation = await risk_explanation_chain.ainvoke(formatted_input)
+        # 🛑 Use KAL801-specific chain with validation if flight_id is KAL801
+        flight_id_for_chain = formatted_input.get("flight_id", "Unknown")
+        if flight_id_for_chain == "KAL801":
+            # Use KAL801-specific risk explanation with grounded context
+            risk_chain = get_risk_explanation_chain_with_validation("KAL801")
+            explanation = await risk_chain(formatted_input)
+        else:
+            # Use standard risk explanation chain
+            explanation = await risk_explanation_chain.ainvoke(formatted_input)
 
         return {"explanation": explanation}
     except Exception as e:

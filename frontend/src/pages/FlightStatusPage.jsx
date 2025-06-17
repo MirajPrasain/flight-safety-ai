@@ -21,6 +21,8 @@ async function speak(text, provider = TTS_PROVIDERS.WEB_SPEECH, audioRef = null)
         return speak(text, TTS_PROVIDERS.WEB_SPEECH, audioRef);
       }
 
+      console.log('Starting ElevenLabs TTS...');
+      
       const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/NFG5qt843uXKj4pFvR7C', {
         method: 'POST',
         headers: {
@@ -43,21 +45,61 @@ async function speak(text, provider = TTS_PROVIDERS.WEB_SPEECH, audioRef = null)
         const audioUrl = URL.createObjectURL(audioBlob);
         const audio = new Audio(audioUrl);
         
+        console.log('ElevenLabs audio created, storing reference...');
+        
         // Store the audio instance for stopping
         if (audioRef) {
+          // Clear any existing audio first
+          if (audioRef.current) {
+            console.log('Clearing existing audio reference...');
+            try {
+              audioRef.current.pause();
+              audioRef.current.currentTime = 0;
+              if (audioRef.current.src) {
+                URL.revokeObjectURL(audioRef.current.src);
+              }
+            } catch (error) {
+              console.error('Error clearing existing audio:', error);
+            }
+          }
           audioRef.current = audio;
+          console.log('Audio reference stored:', audioRef.current);
         }
         
-        audio.play();
+        // Set up event listeners
+        audio.onended = () => {
+          console.log('ElevenLabs audio ended naturally');
+          if (audioRef && audioRef.current === audio) {
+            audioRef.current = null;
+          }
+        };
+        
+        audio.onerror = (error) => {
+          console.error('ElevenLabs audio error:', error);
+          if (audioRef && audioRef.current === audio) {
+            audioRef.current = null;
+          }
+        };
+        
+        audio.onpause = () => {
+          console.log('ElevenLabs audio paused');
+        };
+        
+        // Start playing
+        console.log('Starting ElevenLabs audio playback...');
+        await audio.play();
+        
         return new Promise((resolve) => {
           audio.onended = () => {
-            if (audioRef) {
+            console.log('ElevenLabs audio playback completed');
+            if (audioRef && audioRef.current === audio) {
               audioRef.current = null;
             }
             resolve();
           };
           audio.onerror = () => {
-            if (audioRef) {
+            console.error('ElevenLabs audio playback error');
+            if (audioRef && audioRef.current === audio) {
               audioRef.current = null;
             }
             resolve();
@@ -91,7 +133,7 @@ async function speak(text, provider = TTS_PROVIDERS.WEB_SPEECH, audioRef = null)
 
 // Stop speech function
 function stopSpeech(audioRef = null) {
-  console.log('Stopping speech...');
+  console.log('Stopping speech...', { audioRef: audioRef?.current });
   
   // Stop Web Speech
   if ('speechSynthesis' in window) {
@@ -102,14 +144,36 @@ function stopSpeech(audioRef = null) {
   // Stop ElevenLabs audio
   if (audioRef && audioRef.current) {
     try {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      audioRef.current.src = '';
+      console.log('Stopping ElevenLabs audio...');
+      const audio = audioRef.current;
+      
+      // Pause and reset the audio
+      audio.pause();
+      audio.currentTime = 0;
+      
+      // Remove event listeners to prevent memory leaks
+      audio.onended = null;
+      audio.onerror = null;
+      audio.onpause = null;
+      
+      // Clear the audio source
+      if (audio.src) {
+        URL.revokeObjectURL(audio.src);
+        audio.src = '';
+      }
+      
+      // Clear the reference
       audioRef.current = null;
-      console.log('ElevenLabs audio stopped');
+      console.log('ElevenLabs audio stopped successfully');
     } catch (error) {
       console.error('Error stopping ElevenLabs audio:', error);
+      // Force clear the reference even if there's an error
+      if (audioRef) {
+        audioRef.current = null;
+      }
     }
+  } else {
+    console.log('No ElevenLabs audio reference found to stop');
   }
 }
 
@@ -175,11 +239,18 @@ const FlightStatusPage = () => {
       .replace(/[\u{2600}-\u{26FF}]/gu, '') // Miscellaneous Symbols
       .replace(/[\u{2700}-\u{27BF}]/gu, '') // Dingbats
       .replace(/[🚨⚠️🔹📋⚡🔥💥]/g, '') // Specific emojis
-      // Remove markdown formatting
-      .replace(/\*\*(.*?)\*\*/g, '$1')
-      .replace(/\*(.*?)\*/g, '$1')
-      .replace(/^#{1,6}\s+/gm, '')
-      .replace(/[[\](){}]/g, '')
+      // Remove markdown formatting more thoroughly
+      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove **bold**
+      .replace(/\*(.*?)\*/g, '$1') // Remove *italic*
+      .replace(/^#{1,6}\s+/gm, '') // Remove headers
+      .replace(/[[\](){}]/g, '') // Remove brackets and braces
+      .replace(/`(.*?)`/g, '$1') // Remove backticks
+      .replace(/~~(.*?)~~/g, '$1') // Remove strikethrough
+      .replace(/^\s*[-*+]\s+/gm, '') // Remove bullet points
+      .replace(/^\s*\d+\.\s+/gm, '') // Remove numbered lists
+      .replace(/^\s*>\s+/gm, '') // Remove blockquotes
+      .replace(/^\s*\|.*\|.*$/gm, '') // Remove table rows
+      .replace(/^\s*[-=]+\s*$/gm, '') // Remove horizontal rules
       // Clean up multiple lines and convert to single flowing text
       .replace(/\n\s*\n/g, ' ') // Replace double line breaks with space
       .replace(/\n/g, ' ') // Replace single line breaks with space
@@ -187,6 +258,9 @@ const FlightStatusPage = () => {
       .replace(/\.\s*\./g, '.') // Fix double periods
       .replace(/\s*,\s*/g, ', ') // Fix comma spacing
       .replace(/\s*:\s*/g, ': ') // Fix colon spacing
+      .replace(/\s*;\s*/g, '; ') // Fix semicolon spacing
+      .replace(/\s*!\s*/g, '! ') // Fix exclamation spacing
+      .replace(/\s*\?\s*/g, '? ') // Fix question mark spacing
       .trim();
   };
 
@@ -563,8 +637,10 @@ const FlightStatusPage = () => {
 
   // Global stop function
   const stopAllAudio = useCallback(() => {
+    console.log('stopAllAudio called, current state:', { isSpeaking, audioRef: currentAudioRef?.current });
     stopSpeech(currentAudioRef);
     setIsSpeaking(false);
+    console.log('stopAllAudio completed');
   }, []);
 
   // Auto-speak effect for new AI messages
@@ -589,14 +665,22 @@ const FlightStatusPage = () => {
 
   // Manual speak button handler
   const handleSpeak = useCallback(async (messageId, content) => {
+    console.log('handleSpeak called:', { messageId, isSpeaking, ttsProvider });
+    
     // If already speaking, stop first
     if (isSpeaking) {
+      console.log('Already speaking, stopping audio...');
       stopAllAudio();
       return;
     }
     
     const textToSpeak = cleanMarkdown(content);
-    if (!textToSpeak) return;
+    if (!textToSpeak) {
+      console.log('No text to speak after cleaning');
+      return;
+    }
+    
+    console.log('Starting speech for message:', messageId);
     
     // Stop any existing audio before starting new one
     stopAllAudio();
@@ -605,10 +689,13 @@ const FlightStatusPage = () => {
     setIsSpeaking(true);
     
     try {
+      console.log('Calling speak function with provider:', ttsProvider);
       await speak(textToSpeak, ttsProvider, currentAudioRef);
+      console.log('Speech completed successfully');
     } catch (error) {
       console.error('TTS error:', error);
     } finally {
+      console.log('Setting isSpeaking to false');
       setIsSpeaking(false);
     }
   }, [ttsProvider, isSpeaking, stopAllAudio]);
