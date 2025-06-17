@@ -121,6 +121,10 @@ const CopilotPage = () => {
     navigate(`/chat/${flightId}`);
   };
 
+  const handleNewFlightClick = () => {
+    navigate('/flight-status');
+  };
+
   // Animation variants
   const pageVariants = {
     initial: { opacity: 0 },
@@ -169,6 +173,18 @@ const CopilotPage = () => {
     tap: { 
       scale: 0.95,
       transition: { duration: 0.1 }
+    }
+  };
+
+  // Pulsing animation for the new flight card
+  const pulseVariants = {
+    pulse: {
+      scale: [1, 1.02, 1],
+      transition: {
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }
     }
   };
 
@@ -238,6 +254,61 @@ const CopilotPage = () => {
           </motion.div>
 
           <div className="flights-grid">
+            {/* New Flight Card */}
+            <motion.div 
+              className="flight-card new-flight-card"
+              variants={cardVariants}
+              initial="initial"
+              animate="animate"
+              custom={0}
+              whileHover={{ 
+                y: -8,
+                transition: { duration: 0.3, ease: "easeOut" }
+              }}
+            >
+              <motion.div 
+                className="card-glass new-flight-glass"
+                variants={pulseVariants}
+                animate="pulse"
+              >
+                <div className="card-content">
+                  <div className="card-header new-flight-header">
+                    <div className="new-flight-icon">+</div>
+                    <h3 className="flight-title new-flight-title">New Flight</h3>
+                  </div>
+
+                  <div className="new-flight-description">
+                    <p>Start your own flight with live AI Copilot assistance</p>
+                  </div>
+
+                  <div className="new-flight-details">
+                    <div className="detail-section">
+                      <h5 className="section-title">Interactive Simulation</h5>
+                      <p className="section-content">
+                        Experience real-time AI copilot guidance from takeoff to landing with customizable flight scenarios.
+                      </p>
+                    </div>
+                  </div>
+
+                  <motion.button 
+                    className="simulate-btn new-flight-btn"
+                    onClick={handleNewFlightClick}
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                    title="Simulate your own flight phase from takeoff to landing"
+                  >
+                    <span className="btn-text">Start New Flight</span>
+                    <span className="btn-icon">✈️</span>
+                  </motion.button>
+
+                  <div className="card-glow new-flight-glow"></div>
+                  <div className="card-reflection"></div>
+                  <div className="card-shadow"></div>
+                </div>
+              </motion.div>
+            </motion.div>
+
             {flightsData.map((flight, index) => (
               <motion.div 
                 key={flight.id} 
@@ -245,7 +316,7 @@ const CopilotPage = () => {
                 variants={cardVariants}
                 initial="initial"
                 animate="animate"
-                custom={index}
+                custom={index + 1}
                 whileHover={{ 
                   y: -8,
                   transition: { duration: 0.3, ease: "easeOut" }

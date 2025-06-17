@@ -129,33 +129,55 @@ const ChatPage = () => {
   // Track last spoken message to prevent duplicates
   const lastSpokenRef = useRef(null);
 
-  // Utility function to clean up markdown formatting
+  // Utility function to clean up markdown formatting for TTS
   const cleanMarkdown = (text) => {
     return text
+      // Remove all emojis and special characters more comprehensively
+      .replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
+      .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Miscellaneous Symbols and Pictographs
+      .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transport and Map Symbols
+      .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, '') // Regional Indicator Symbols
+      .replace(/[\u{2600}-\u{26FF}]/gu, '') // Miscellaneous Symbols
+      .replace(/[\u{2700}-\u{27BF}]/gu, '') // Dingbats
+      .replace(/[🚨⚠️🔹📋⚡🔥💥]/g, '') // Specific emojis
+      // Remove markdown formatting
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/\*(.*?)\*/g, '$1')
       .replace(/^#{1,6}\s+/gm, '')
       .replace(/[[\](){}]/g, '')
-      .replace(/\n\s*\n/g, '. ')
-      .replace(/\n/g, '. ')
-      .replace(/\.\s*\./g, '.')
-      .replace(/\s+/g, ' ')
+      // Clean up multiple lines and convert to single flowing text
+      .replace(/\n\s*\n/g, ' ') // Replace double line breaks with space
+      .replace(/\n/g, ' ') // Replace single line breaks with space
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .replace(/\.\s*\./g, '.') // Fix double periods
+      .replace(/\s*,\s*/g, ', ') // Fix comma spacing
+      .replace(/\s*:\s*/g, ': ') // Fix colon spacing
       .trim();
   };
 
   // Utility function to format AI response with proper structure and indentations
   const formatAIResponse = (text, messageId) => {
-    const cleaned = cleanMarkdown(text);
+    // Remove emojis and markdown formatting from display text but keep structure
+    const displayText = text
+      .replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
+      .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Miscellaneous Symbols and Pictographs
+      .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transport and Map Symbols
+      .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, '') // Regional Indicator Symbols
+      .replace(/[\u{2600}-\u{26FF}]/gu, '') // Miscellaneous Symbols
+      .replace(/[\u{2700}-\u{27BF}]/gu, '') // Dingbats
+      .replace(/[🚨⚠️🔹📋⚡🔥💥]/g, '') // Specific emojis
+      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove ** markdown
+      .replace(/\*(.*?)\*/g, '$1'); // Remove * markdown
     
     // Split into sections if there are clear separators
-    const sections = cleaned.split(/\n\s*\n/);
+    const sections = displayText.split(/\n\s*\n/);
     
     return sections.map((section, index) => {
       const trimmed = section.trim();
       if (!trimmed) return null;
       
       // Check if this is a header section (contains keywords like "System Status", "Urgent Recommendation", etc.)
-      const isHeader = /^(System Status|Urgent Recommendation|Critical Situation|Next Steps|Emergency Procedures|Historical Reference|Lessons Learned|Applicable Procedures|Diversion Recommendation|Approach Procedures|Alternatives)/i.test(trimmed);
+      const isHeader = /^(System Status|Urgent Recommendation|Critical Situation|Next Steps|Emergency Procedures|Historical Reference|Lessons Learned|Applicable Procedures|Diversion Recommendation|Approach Procedures|Alternatives|IMMEDIATE ACTION REQUIRED|CLOSING IMMEDIATE DISTANCE|CRITICAL EMERGENCY)/i.test(trimmed);
       
       // Format the text with proper structure
       const lines = trimmed.split('\n').map(line => line.trim()).filter(line => line.length > 0);
@@ -171,11 +193,11 @@ const ChatPage = () => {
         }
         // Handle headers (first line of header sections)
         if (isHeader && lineIndex === 0) {
-          return `📋 ${line}`;
+          return `SECTION: ${line}`;
         }
         // Handle sub-headers
         if (/^[A-Z][A-Z\s]+:$/.test(line)) {
-          return `\n🔹 ${line}`;
+          return `\nSUB-SECTION: ${line}`;
         }
         // Regular content with proper indentation
         if (isHeader && lineIndex > 0) {

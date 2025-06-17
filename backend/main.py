@@ -338,40 +338,40 @@ async def chat_system_status(request: Dict[str, str]):
 
 fallback_messages = {
     "KAL801": (
-        "🚨 CRITICAL TERRAIN ALERT 🚨\n"
+        "CRITICAL TERRAIN ALERT\n"
         "Flight KAL801 is descending below glide slope near Guam. "
         "Initiate an immediate go-around. Monitor altitude closely and cross-check terrain avoidance systems."
     ),
     "CRASH_KAL801": (
-        "🚨 HISTORICAL KAL801 REFERENCE 🚨\n"
+        "HISTORICAL KAL801 REFERENCE\n"
         "This flight pattern matches Korean Air Flight 801 (1997 Guam crash). "
         "Immediate terrain pull-up required. Verify glideslope status and initiate missed approach procedures."
     ),
     "CRASH_THY1951": (
-        "⚠️ STALL ALERT: Faulty altitude reading detected. Add thrust immediately and prepare for go-around! "
+        "STALL ALERT: Faulty altitude reading detected. Add thrust immediately and prepare for go-around! "
         "Cross-check radio altimeters and monitor airspeed closely."
     ),
     "CRASH_AAR214": (
-        "🚨 LOW SPEED APPROACH WARNING 🚨\n"
+        "LOW SPEED APPROACH WARNING\n"
         "Flight 214 is approaching SFO at dangerously low speed. Check autothrottle status and increase thrust immediately. "
         "Visual approach monitoring required."
     ),
     "CRASH_COLGAN3407": (
-        "🚨 STALL WARNING: Airspeed monitoring critical! "
+        "STALL WARNING: Airspeed monitoring critical! "
         "Flight 3407 pattern matches Colgan Air crash (2009 Buffalo). "
         "Monitor airspeed during approach, maintain sterile cockpit, and be prepared for immediate stall recovery procedures."
     ),
     "CRASH_AF447": (
-        "🚨 PITOT TUBE WARNING: Unreliable airspeed detected! "
+        "PITOT TUBE WARNING: Unreliable airspeed detected! "
         "Flight 447 pattern matches Air France crash (2009 Atlantic). "
         "Follow unreliable airspeed procedures, maintain pitch and thrust, and be alert for high-altitude stall conditions."
     ),
     "TURKISH1951": (
-        "🚨 AUTOPILOT MALFUNCTION 🚨\n"
+        "AUTOPILOT MALFUNCTION\n"
         "Flight 1951 shows radio altimeter discrepancies. Disengage autopilot, manually stabilize descent, and confirm altitude using backup instruments."
     ),
     "ASIANA214": (
-        "🚨 LOW SPEED APPROACH WARNING 🚨\n"
+        "LOW SPEED APPROACH WARNING\n"
         "Flight 214 is approaching SFO at dangerously low speed. Increase thrust and adjust pitch angle immediately. Visual confirmation advised."
     )
 }

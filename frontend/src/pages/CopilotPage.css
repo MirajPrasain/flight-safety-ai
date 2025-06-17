@@ -162,6 +162,141 @@
   position: relative;
 }
 
+/* New Flight Card Specific Styles */
+.new-flight-card {
+  order: -1; /* Ensures it appears first */
+}
+
+.new-flight-glass {
+  border: 2px dashed rgba(0, 153, 204, 0.3);
+  background: rgba(0, 153, 204, 0.02);
+  position: relative;
+}
+
+.new-flight-glass::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    rgba(0, 153, 204, 0.1), 
+    rgba(0, 100, 150, 0.05), 
+    rgba(0, 153, 204, 0.1)
+  );
+  border-radius: 18px;
+  z-index: -1;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%, 100% { 
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+.new-flight-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.new-flight-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #00b4ff, #0099cc);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 153, 204, 0.3);
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(0, 153, 204, 0.3);
+  }
+  50% { 
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 153, 204, 0.5);
+  }
+}
+
+.new-flight-title {
+  color: #00b4ff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(0, 180, 255, 0.3);
+}
+
+.new-flight-description {
+  margin-bottom: 1.5rem;
+}
+
+.new-flight-description p {
+  color: #608090;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 400;
+}
+
+.new-flight-details {
+  margin-bottom: 2rem;
+}
+
+.new-flight-btn {
+  background: linear-gradient(135deg, #00b4ff, #0099cc);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.875rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 153, 204, 0.3);
+}
+
+.new-flight-btn:hover {
+  background: linear-gradient(135deg, #0099cc, #007799);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 153, 204, 0.4);
+}
+
+.new-flight-btn .btn-icon {
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+}
+
+.new-flight-glow {
+  background: radial-gradient(circle at center, 
+    rgba(0, 153, 204, 0.15) 0%, 
+    rgba(0, 153, 204, 0.05) 50%, 
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.new-flight-card:hover .new-flight-glow {
+  opacity: 1;
+}
+
 .card-glass {
   position: relative;
   background: rgba(255, 255, 255, 0.02);

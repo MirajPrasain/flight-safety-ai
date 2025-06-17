@@ -97,16 +97,16 @@ Respond with URGENT, IMMEDIATE actions only. Use CAPS for critical warnings.
 - **ASIANA214**: Low-speed manual approach failure, poor pilot monitoring, landing gear issues
 
 ## Emergency Response Format:
-🚨 **CRITICAL EMERGENCY** 🚨
-**IMMEDIATE ACTION REQUIRED:**
+CRITICAL EMERGENCY
+IMMEDIATE ACTION REQUIRED:
 [Specific action in CAPS]
 
-**EMERGENCY PROCEDURES:**
+EMERGENCY PROCEDURES:
 1. [Step 1]
 2. [Step 2]
 3. [Step 3]
 
-**CONTACT ATC IMMEDIATELY**
+CONTACT ATC IMMEDIATELY
 """),
         ("human", "Flight ID: {flight_id}\nEmergency Message: {message}")
     ])
@@ -128,15 +128,15 @@ Provide specific airport recommendations and approach procedures.
 - **ASIANA214**: San Francisco area - consider Oakland, San Jose, Sacramento
 
 ## Response Format:
-**DIVERSION RECOMMENDATION:**
+DIVERSION RECOMMENDATION:
 [Recommended airport with distance and approach type]
 
-**APPROACH PROCEDURES:**
+APPROACH PROCEDURES:
 - Runway: [specific runway]
 - Approach: [ILS/VOR/Visual]
 - Minimums: [ceiling/visibility]
 
-**ALTERNATIVES:**
+ALTERNATIVES:
 [List of backup airports]
 """),
         ("human", "Flight ID: {flight_id}\nDiversion Request: {message}")
@@ -159,15 +159,15 @@ Reference relevant past incidents and lessons learned.
 - **ASIANA214**: 2013 San Francisco crash - low-speed approach, crew monitoring
 
 ## Response Format:
-**HISTORICAL REFERENCE:**
+HISTORICAL REFERENCE:
 [Relevant past incident with key factors]
 
-**LESSONS LEARNED:**
+LESSONS LEARNED:
 - [Lesson 1]
 - [Lesson 2]
 - [Lesson 3]
 
-**APPLICABLE PROCEDURES:**
+APPLICABLE PROCEDURES:
 [Specific procedures from historical incident]
 """),
         ("human", "Flight ID: {flight_id}\nHistorical Query: {message}")
@@ -190,19 +190,19 @@ Focus on instrument readings, system health, and operational status.
 - **ASIANA214**: Verify speed indicators, landing gear, auto-throttle
 
 ## Response Format:
-**SYSTEM STATUS:**
+SYSTEM STATUS:
 - Altitude: [current reading]
 - Speed: [current reading]
 - Navigation: [status]
 - Engines: [status]
 
-**INSTRUMENT CHECKLIST:**
+INSTRUMENT CHECKLIST:
 - [ ] Primary instruments
 - [ ] Backup instruments
 - [ ] Warning systems
 - [ ] Communication systems
 
-**RECOMMENDATIONS:**
+RECOMMENDATIONS:
 [Specific system-related actions]
 """),
         ("human", "Flight ID: {flight_id}\nSystem Query: {message}")
@@ -244,13 +244,14 @@ Respond to pilot queries with clear, urgent, and structured advice when risks ar
 Monitor for these keywords in pilot messages: "warning", "alert", "system failure", "low speed", "terrain", "altimeter", "autopilot", "approach", "landing gear", "glideslope", "minimum altitude", "terrain pull-up"
 
 ## Response Guidelines:
-- If there's a known risk or emergency keyword detected, START WITH A RED ALERT (⚠️).
-- Use bold headlines like **CRITICAL SITUATION**, **URGENT RECOMMENDATION**
+- If there's a known risk or emergency keyword detected, START WITH A CRITICAL ALERT.
+- Use clear headlines like CRITICAL SITUATION, URGENT RECOMMENDATION (no markdown formatting)
 - Include only the most essential flight data (altitude, health, weather) — keep it concise
 - Prioritize crew safety. Do NOT sound passive or unsure.
 - Use CAPS for critical warnings and immediate actions
-- Structure response with: **System Status** → **Urgent Recommendation** → **Next Steps**
+- Structure response with: System Status → Urgent Recommendation → Next Steps
 - Reference historical incidents when relevant (e.g., "Similar to KAL801 Guam crash - immediate terrain pull-up required")
+- Avoid using ** or * markdown formatting - use plain text instead
 
 ## Flight-Specific Recommendations:
 - **KAL801/CRASH_KAL801**: Emphasize terrain proximity, immediate go-around, altitude management, glideslope verification, crew cross-checks
@@ -268,12 +269,12 @@ Respond based on this flight ID and query.
 
 # Flight-specific fallback messages
 FLIGHT_FALLBACKS = {
-    "KAL801": "🚨 CRITICAL TERRAIN ALERT 🚨\nFlight KAL801 is descending below glide slope near Guam. Initiate an immediate go-around. Monitor altitude closely and cross-check terrain avoidance systems.",
-    "CRASH_KAL801": "🚨 HISTORICAL KAL801 REFERENCE 🚨\nThis flight pattern matches Korean Air Flight 801 (1997 Guam crash). Immediate terrain pull-up required. Verify glideslope status and initiate missed approach procedures.",
-    "CRASH_THY1951": "⚠️ STALL ALERT: Faulty altitude reading detected. Add thrust immediately and prepare for go-around! Cross-check radio altimeters and monitor airspeed closely.",
-    "CRASH_AAR214": "🚨 LOW SPEED APPROACH WARNING 🚨\nFlight 214 is approaching SFO at dangerously low speed. Check autothrottle status and increase thrust immediately. Visual approach monitoring required.",
-    "TURKISH1951": "🚨 AUTOPILOT MALFUNCTION 🚨\nFlight 1951 shows radio altimeter discrepancies. Disengage autopilot, manually stabilize descent, and confirm altitude using backup instruments.",
-    "ASIANA214": "🚨 LOW SPEED APPROACH WARNING 🚨\nFlight 214 is approaching SFO at dangerously low speed. Increase thrust and adjust pitch angle immediately. Visual confirmation advised."
+    "KAL801": "CRITICAL TERRAIN ALERT\nFlight KAL801 is descending below glide slope near Guam. Initiate an immediate go-around. Monitor altitude closely and cross-check terrain avoidance systems.",
+    "CRASH_KAL801": "HISTORICAL KAL801 REFERENCE\nThis flight pattern matches Korean Air Flight 801 (1997 Guam crash). Immediate terrain pull-up required. Verify glideslope status and initiate missed approach procedures.",
+    "CRASH_THY1951": "STALL ALERT: Faulty altitude reading detected. Add thrust immediately and prepare for go-around! Cross-check radio altimeters and monitor airspeed closely.",
+    "CRASH_AAR214": "LOW SPEED APPROACH WARNING\nFlight 214 is approaching SFO at dangerously low speed. Check autothrottle status and increase thrust immediately. Visual approach monitoring required.",
+    "TURKISH1951": "AUTOPILOT MALFUNCTION\nFlight 1951 shows radio altimeter discrepancies. Disengage autopilot, manually stabilize descent, and confirm altitude using backup instruments.",
+    "ASIANA214": "LOW SPEED APPROACH WARNING\nFlight 214 is approaching SFO at dangerously low speed. Increase thrust and adjust pitch angle immediately. Visual confirmation advised."
 }
 
 def get_fallback_message(flight_id: str, intent: str = "status_update") -> str:
