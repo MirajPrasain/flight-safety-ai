@@ -147,14 +147,6 @@ const FlightStatusPage = () => {
   // Quick action buttons for different scenarios
   const quickActions = [
     { 
-      id: 'emergency', 
-      label: 'Emergency Advice', 
-      icon: '🚨', 
-      color: '#ff4757',
-      endpoint: 'advise_pilot',
-      description: 'Get immediate emergency guidance'
-    },
-    { 
       id: 'system_status', 
       label: 'System Status', 
       icon: '🔧', 
@@ -349,14 +341,52 @@ const FlightStatusPage = () => {
 
       switch (action.endpoint) {
         case 'advise_pilot':
-          // Use emergency advice endpoint
+          // Use emergency advice endpoint with full flight_data object
           response = await fetch('http://localhost:8000/advise_pilot/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              flight_id: 'CUSTOM_FLIGHT'
+              flight_data: {
+                flight_id: 'KAL801',
+                aircraft_type: 'Boeing 737',
+                pilot_id: 'PILOT001',
+                timestamp: new Date().toISOString(),
+                location: {
+                  latitude: 37.7749,
+                  longitude: -122.4194,
+                  altitude_ft: 35000
+                },
+                speed: {
+                  airspeed_knots: 450,
+                  vertical_speed_fpm: 0
+                },
+                engine: {
+                  engine_1_rpm: 95,
+                  engine_2_rpm: 95
+                },
+                aircraft_systems: {
+                  landing_gear_status: 'UP',
+                  flap_setting: '0',
+                  autopilot_engaged: true,
+                  warnings: []
+                },
+                environment: {
+                  wind_speed_knots: 20,
+                  wind_direction_deg: 270,
+                  temperature_c: -50,
+                  visibility_miles: 10,
+                  precipitation: 'NONE',
+                  terrain_proximity_ft: 1000
+                },
+                pilot_actions: {
+                  throttle_percent: 85,
+                  pitch_deg: 2,
+                  roll_deg: 0,
+                  yaw_deg: 0
+                }
+              }
             })
           });
           data = await response.json();

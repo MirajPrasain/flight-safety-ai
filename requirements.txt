@@ -6,7 +6,6 @@ python-dotenv
 langchain
 langchain-core
 langchain-community # For Ollama or other community integrations
-langchain-openai # For OpenAI GPT-4 integration
 ollama # If you choose Ollama for local LLM
 pydantic-settings # For config.py (explicitly add if not auto-installed by pydantic or fastapi)
 motor # For proper async MongoDB with FastAPI (Highly Recommended for async operations)
