@@ -56,12 +56,14 @@ Every year, hundreds of lives are lost due to preventable aircraft incidents. Hu
 
 | Layer       | Tools |
 |-------------|-------|
-| Frontend    | HTML / JS / React (TBD) |
+| Frontend    | React.js with modern UI components |
 | Backend     | FastAPI |
-| AI Chains   | LangChain, LLM (LLaMA3 / OpenAI) |
-| Voice Agent | pyttsx3 / Google TTS |
+| AI Chains   | LangChain + Gemma 2B (hackathon restriction) |
+| Voice Agent | ElevenLabs TTS + Web Speech API |
 | Database    | MongoDB Atlas |
 | Cloud       | Google Cloud (App Engine / Cloud Run) |
+
+> **Note**: Due to hackathon restrictions, we are limited to using LangChain with Gemma 2B model. Other LLM models are not permitted for this competition.
 
 ---
 
@@ -95,7 +97,7 @@ cd AirPilot
 ## 🏗️ Architecture
 
 ### Backend (FastAPI + MongoDB)
-- **LangChain Integration**: Uses Ollama with "gemma:2b" model for local inference
+- **LangChain Integration**: Uses Ollama with "gemma:2b" model for local inference (hackathon requirement)
 - **Vector Search**: Sentence transformers for semantic similarity matching
 - **Real-time Processing**: 15-second timeout with fallback responses
 - **CORS Support**: Configured for React frontend integration
@@ -105,6 +107,7 @@ cd AirPilot
 - **Flight Selection**: Dropdown with historical crash scenarios
 - **Responsive Design**: Modern UI with emergency-themed styling
 - **Real-time Updates**: Live chat with AI copilot responses
+- **Voice Integration**: ElevenLabs TTS with fallback to Web Speech API
 
 ## 🚀 Quick Start
 
@@ -112,7 +115,7 @@ cd AirPilot
 - Python 3.8+
 - Node.js 16+
 - MongoDB
-- Ollama with "gemma:2b" model
+- Ollama with "gemma:2b" model (required for hackathon compliance)
 
 ### Backend Setup
 ```bash
