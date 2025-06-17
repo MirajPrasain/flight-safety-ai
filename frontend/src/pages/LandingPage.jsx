@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import WhyAICopilot from '../components/WhyAICopilot';
-import CrashCaseStudies from '../components/CrashCaseStudies';
 import '../styles/LandingPage.css';
 
 const LandingPage = () => {
@@ -57,7 +56,8 @@ const LandingPage = () => {
       {/* Scrollable Sections */}
       <div className="scrollable-sections">
         <WhyAICopilot />
-        <CrashCaseStudies />
+  
+
       </div>
     </div>
   );
