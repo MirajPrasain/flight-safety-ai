@@ -17,6 +17,7 @@ import {
   BackArrowIcon,
   RefreshIcon
 } from '../components/Icons';
+import BASE_URL from '../config/api';
 import './ChatPage.css';
 
 // Enhanced TTS function that supports both Web Speech and ElevenLabs
@@ -307,7 +308,7 @@ const ChatPage = () => {
 
     try {
       // Send request to backend
-      const response = await fetch('http://localhost:8000/chat/status_update/', {
+      const response = await fetch(`${BASE_URL}/chat/status_update/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -380,7 +381,7 @@ const ChatPage = () => {
   // Check backend connection status
   const checkConnection = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8000/', {
+      const response = await fetch(`${BASE_URL}/`, {
         method: 'GET',
         signal: AbortSignal.timeout(3000) // 3 second timeout
       });

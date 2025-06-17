@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BackArrowIcon, SpeakerIcon, StopIcon, MicrophoneIcon, PlaneIcon } from '../components/Icons';
+import BASE_URL from '../config/api';
 import './FlightStatusPage.css';
 
 // TTS Providers
@@ -355,7 +356,7 @@ const FlightStatusPage = () => {
 
     try {
       // Use the copilot_chat endpoint for flight phase guidance
-      const response = await fetch(`http://localhost:8000/copilot_chat/?question=${encodeURIComponent(`Provide detailed ${phase.label} procedures, checklist, and safety considerations for commercial aviation. Include specific steps, speed requirements, altitude considerations, and any warnings or critical points.`)}`, {
+      const response = await fetch(`${BASE_URL}/copilot_chat/?question=${encodeURIComponent(`Provide detailed ${phase.label} procedures, checklist, and safety considerations for commercial aviation. Include specific steps, speed requirements, altitude considerations, and any warnings or critical points.`)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -416,7 +417,7 @@ const FlightStatusPage = () => {
       switch (action.endpoint) {
         case 'advise_pilot':
           // Use emergency advice endpoint with full flight_data object
-          response = await fetch('http://localhost:8000/advise_pilot/', {
+          response = await fetch(`${BASE_URL}/advise_pilot/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -468,7 +469,7 @@ const FlightStatusPage = () => {
 
         case 'chat/system_status':
           // Use system status endpoint
-          response = await fetch('http://localhost:8000/chat/system_status/', {
+          response = await fetch(`${BASE_URL}/chat/system_status/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -483,7 +484,7 @@ const FlightStatusPage = () => {
 
         case 'similar_crashes':
           // Use similar crashes endpoint
-          response = await fetch(`http://localhost:8000/similar_crashes/?query=${encodeURIComponent('flight safety incidents and accidents')}&top_k=2`);
+          response = await fetch(`${BASE_URL}/similar_crashes/?query=${encodeURIComponent('flight safety incidents and accidents')}&top_k=2`);
           data = await response.json();
           // Format the results - fix the data structure
           const formattedResults = data.results.map((crash, index) => 
@@ -552,7 +553,7 @@ const FlightStatusPage = () => {
 
     try {
       // Use the status_update endpoint for general queries
-      const response = await fetch('http://localhost:8000/chat/status_update/', {
+      const response = await fetch(`${BASE_URL}/chat/status_update/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -609,7 +610,7 @@ const FlightStatusPage = () => {
   // Check backend connection status
   const checkConnection = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8000/', {
+      const response = await fetch(`${BASE_URL}/`, {
         method: 'GET',
         signal: AbortSignal.timeout(3000)
       });
